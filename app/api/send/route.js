@@ -27,6 +27,7 @@ export async function POST(request) {
 
       python.stderr.on('data', (data) => {
         errorOutput += data.toString();
+        console.error('Email sender stderr:', data.toString());
       });
 
       python.on('close', (code) => {
