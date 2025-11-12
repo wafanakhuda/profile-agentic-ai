@@ -23,16 +23,36 @@ def send_email(to_email, subject, body_html, from_email, from_name, smtp_user, s
         html_part = MIMEText(body_html, 'html')
         message.attach(html_part)
         
-        # Connect to Gmail SMTP
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        print(f"DEBUG: Connecting to Gmail SMTP for {to_email}...", file=sys.stderr, flush=True)
+        
+        # Connect to Gmail SMTP with timeout
+        with smtplib.SMTP('smtp.gmail.com', 587, timeout=30) as server:
+            print(f"DEBUG: Starting TLS...", file=sys.stderr, flush=True)
             server.starttls()
+            
+            print(f"DEBUG: Logging in...", file=sys.stderr, flush=True)
             server.login(smtp_user, smtp_password)
+            
+            print(f"DEBUG: Sending email...", file=sys.stderr, flush=True)
             server.sendmail(smtp_user, to_email, message.as_string())
         
+        print(f"DEBUG: Email sent successfully to {to_email}", file=sys.stderr, flush=True)
         return {'status': 'success', 'email': to_email}
     
+    except smtplib.SMTPAuthenticationError as e:
+        error_msg = f'Gmail authentication failed: {str(e)}'
+        print(f"DEBUG ERROR: {error_msg}", file=sys.stderr, flush=True)
+        return {'status': 'error', 'email': to_email, 'error': error_msg}
+    
+    except smtplib.SMTPException as e:
+        error_msg = f'SMTP error: {str(e)}'
+        print(f"DEBUG ERROR: {error_msg}", file=sys.stderr, flush=True)
+        return {'status': 'error', 'email': to_email, 'error': error_msg}
+    
     except Exception as e:
-        return {'status': 'error', 'email': to_email, 'error': str(e)}
+        error_msg = f'Error: {str(e)}'
+        print(f"DEBUG ERROR: {error_msg}", file=sys.stderr, flush=True)
+        return {'status': 'error', 'email': to_email, 'error': error_msg}
 
 def main():
     if len(sys.argv) < 2:
@@ -48,13 +68,16 @@ def main():
     
     # Get SMTP credentials from environment
     smtp_user = os.getenv('GMAIL_USER')
-    smtp_password = os.getenv('GMAIL_APP_PASSWORD')
+    smtp_password = os.getenv('GMAIL_APP_PASSWORD', '').replace(' ', '')  # Remove any spaces
     from_email = os.getenv('FROM_EMAIL', 'noreply@iiitd.ac.in')
     from_name = os.getenv('FROM_NAME', 'IIIT Dharwad')
     
     if not smtp_user or not smtp_password:
         print(json.dumps({'error': 'Gmail credentials not configured'}), flush=True)
         sys.exit(1)
+    
+    # Debug log (remove after testing)
+    print(f"DEBUG: Attempting to send {len(emails_data)} emails via {smtp_user}", file=sys.stderr, flush=True)
     
     results = []
     success_count = 0
