@@ -30,7 +30,17 @@ export async function POST(request) {
         console.error('Email sender stderr:', data.toString());
       });
 
+      // Add timeout to kill process after 30 seconds
+      const timeout = setTimeout(() => {
+        python.kill();
+        resolve(NextResponse.json({
+          success: false,
+          error: 'Email sending timed out. Gmail SMTP may be blocked on this server. Consider using SendGrid instead.'
+        }, { status: 500 }));
+      }, 30000);
+
       python.on('close', (code) => {
+        clearTimeout(timeout);
         if (code === 0 && resultData) {
           try {
             const result = JSON.parse(resultData);
