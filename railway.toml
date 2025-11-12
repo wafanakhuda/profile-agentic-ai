@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npm run build"
+buildCommand = "/opt/venv/bin/pip install -r requirements.txt && npm run build"
 
 [deploy]
 startCommand = "npm start"
