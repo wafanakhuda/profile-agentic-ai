@@ -95,8 +95,11 @@ def main():
     skipped_count = 0
     
     for email_data in emails_data:
+        student_email = email_data.get('student_email')
+        
         # Skip if student has no email address
-        if not email_data.get('student_email'):
+        if not student_email or student_email == 'None' or str(student_email).strip() == '':
+            print(f"DEBUG: Skipping - no email for {email_data.get('student_name', 'Unknown')}", file=sys.stderr, flush=True)
             results.append({
                 'status': 'skipped',
                 'email': None,
@@ -105,24 +108,35 @@ def main():
             skipped_count += 1
             continue
         
+        print(f"DEBUG: Processing email for {student_email}", file=sys.stderr, flush=True)
+        
         result = send_email(
-            email_data['student_email'],
+            student_email,
             email_data['subject'],
             email_data['body_html'],
             from_name,
             smtp_user,
             smtp_password
         )
+        
+        print(f"DEBUG: Result for {student_email}: {result['status']}", file=sys.stderr, flush=True)
+        
         results.append(result)
         if result['status'] == 'success':
             success_count += 1
             # Record nudge after successful send
-            nudge_level = email_data.get('nudge_level', 1)
-            record_nudge(
-                email_data['student_email'],
-                email_data.get('student_name', 'Unknown'),
-                nudge_level
-            )
+            try:
+                nudge_level = email_data.get('nudge_level', 1)
+                record_nudge(
+                    student_email,
+                    email_data.get('student_name', 'Unknown'),
+                    nudge_level
+                )
+            except Exception as e:
+                print(f"DEBUG: Failed to record nudge: {str(e)}", file=sys.stderr, flush=True)
+    
+    # Final summary
+    print(f"DEBUG: FINAL SUMMARY - Total: {len(emails_data)}, Sent: {success_count}, Skipped: {skipped_count}, Failed: {len(emails_data) - success_count - skipped_count}", file=sys.stderr, flush=True)
     
     print(json.dumps({
         'success': True,
