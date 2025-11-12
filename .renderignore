@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+.env.local
+uploads/*
+nudge_history.json
+test_students.xlsx
+*.log

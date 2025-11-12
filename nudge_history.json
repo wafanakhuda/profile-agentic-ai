@@ -1,0 +1,32 @@
+{
+  "prasad.24phddi07@iiitdwd.ac.in": {
+    "student_name": "Prasad K",
+    "nudge_count": 1,
+    "last_nudge_date": "2025-11-12T18:23:31.513026",
+    "nudges": [
+      {
+        "level": 1,
+        "date": "2025-11-12T18:23:24.724973"
+      },
+      {
+        "level": 1,
+        "date": "2025-11-12T18:23:31.513035"
+      }
+    ]
+  },
+  "Palshini.24mtrc02@iiidwd.ac.in": {
+    "student_name": "Palshini B Limbani",
+    "nudge_count": 1,
+    "last_nudge_date": "2025-11-12T18:23:32.127368",
+    "nudges": [
+      {
+        "level": 1,
+        "date": "2025-11-12T18:23:25.581505"
+      },
+      {
+        "level": 1,
+        "date": "2025-11-12T18:23:32.127376"
+      }
+    ]
+  }
+}

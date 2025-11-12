@@ -1,0 +1,10 @@
+[
+  {
+    "student_email": "prasad.24phddi07@iiitdwd.ac.in",
+    "student_name": "Prasad K",
+    "subject": "Test: Complete Your Profile - IIIT Dharwad",
+    "body_html": "<html><body><p>Dear Prasad K,</p><p>This is a test email from the Agentic Student Profile System.</p><p>We noticed your profile is 90% complete. Please update: <strong>Gender</strong></p><p><a href='https://forms.gle/AFNpAnnS9aWURoQj9' style='background-color:#4285F4;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;'>Complete Profile</a></p><p>Best regards,<br>IIIT Dharwad</p></body></html>",
+    "missing_fields": ["gender"],
+    "completion": 90
+  }
+]

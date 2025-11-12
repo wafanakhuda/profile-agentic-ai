@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: student-profile-agent
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: yarn install && pip install -r requirements.txt
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GMAIL_USER
+        sync: false
+      - key: GMAIL_APP_PASSWORD
+        sync: false
+      - key: FROM_EMAIL
+        sync: false
+      - key: FROM_NAME
+        sync: false
+      - key: GOOGLE_FORM_URL
+        sync: false
+      - key: MONGO_URL
+        value: mongodb://127.0.0.1:27017/student_profiles
+      - key: NEXT_PUBLIC_BASE_URL
+        generateValue: true
