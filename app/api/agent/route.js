@@ -27,7 +27,8 @@ export async function POST(request) {
 
     // Run Python LangGraph agent
     const pythonScript = path.join(process.cwd(), 'scripts', 'langgraph_agent.py');
-    const pythonPath = '/root/.venv/bin/python3';
+    // Use 'python3' for Render, will use system Python with installed packages
+    const pythonPath = process.env.PYTHON_PATH || 'python3';
     
     return new Promise((resolve) => {
       const python = spawn(pythonPath, [pythonScript, filePath]);
@@ -56,6 +57,7 @@ export async function POST(request) {
 
       python.stderr.on('data', (data) => {
         errorOutput += data.toString();
+        console.error('Python stderr:', data.toString());
       });
 
       python.on('close', (code) => {
