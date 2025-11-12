@@ -31,7 +31,13 @@ export async function POST(request) {
     const pythonPath = process.env.PYTHON_PATH || '/opt/venv/bin/python3' || 'python3';
     
     return new Promise((resolve) => {
-      const python = spawn(pythonPath, [pythonScript, filePath]);
+      const python = spawn(pythonPath, [pythonScript, filePath], {
+        cwd: process.cwd(),
+        env: {
+          ...process.env,
+          PYTHONPATH: '/opt/venv/lib/python3.13/site-packages'
+        }
+      });
       
       let resultData = null;
       let errorOutput = '';
