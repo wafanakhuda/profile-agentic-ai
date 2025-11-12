@@ -12,8 +12,8 @@ export async function POST(request) {
 
     // Run Python email sender
     const pythonScript = path.join(process.cwd(), 'scripts', 'send_emails.py');
-    // Use 'python3' for Render, will use system Python with installed packages
-    const pythonPath = process.env.PYTHON_PATH || 'python3';
+    // Use virtual environment Python on Railway, fallback to system python
+    const pythonPath = process.env.PYTHON_PATH || '/opt/venv/bin/python3' || 'python3';
     
     return new Promise((resolve) => {
       const python = spawn(pythonPath, [pythonScript, JSON.stringify(emails)]);
